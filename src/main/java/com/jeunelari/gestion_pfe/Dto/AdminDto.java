@@ -1,5 +1,7 @@
-package com.jeunelari.gestion_pfe.Dto;
+package com.jeunelari.gestion_pfe.dto;
 
-public class AdminDto {
+import lombok.Data;
 
+@Data
+public class AdminDTO extends UtilisateurDTO {
 }

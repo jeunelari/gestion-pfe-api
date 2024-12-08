@@ -1,5 +1,11 @@
-package com.jeunelari.gestion_pfe.Dto;
+package com.jeunelari.gestion_pfe.dto;
 
-public class EnseignantDto {
+import java.util.Set;
 
+import lombok.Data;
+
+@Data
+public class EnseignantDTO extends UtilisateurDTO {
+    private Long filiereId;
+    private Set<Long> classeIds;
 }

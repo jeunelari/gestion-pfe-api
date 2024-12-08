@@ -1,5 +1,12 @@
-package com.jeunelari.gestion_pfe.Dto;
+package com.jeunelari.gestion_pfe.dto;
 
-public class UtilisateurDto {
+import lombok.Data;
 
+@Data
+public class UtilisateurDTO {
+    private String nom;
+    private String prenom;
+    private String nomUtilisateur;
+    private String motDePasse;
+    private String role; // ADMIN, ETUDIANT, ENSEIGNANT
 }
