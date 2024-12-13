@@ -7,8 +7,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
+import com.jeunelari.gestion_pfe.config.JwtResponse; // Importer JwtResponse
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -24,10 +24,10 @@ public class AuthController {
     private UserDetailsService userDetailsService;
 
     @PostMapping("/connexion")
-    public String login(@RequestBody LoginRequest request) {
+    public JwtResponse login(@RequestBody LoginRequest request) {
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getNomUtilisateur(), request.getMotDePasse())
+                new UsernamePasswordAuthenticationToken(request.getNomUtilisateur(), request.getMotDePasse())
             );
         } catch (BadCredentialsException e) {
             throw new RuntimeException("Nom d'utilisateur ou mot de passe incorrect");
@@ -39,6 +39,8 @@ public class AuthController {
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Aucun rôle trouvé pour l'utilisateur"));
 
-        return jwtTokenUtil.generateToken(userDetails.getUsername(), role);
+        String token = jwtTokenUtil.generateToken(userDetails.getUsername(), role);
+
+        return new JwtResponse(token, role); // Ajouter le rôle dans la réponse
     }
 }

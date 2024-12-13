@@ -12,7 +12,7 @@ import java.util.function.Function;
 public class JwtTokenUtil {
 
     private static final String SECRET_KEY = "monSecretJWTmonSecretJWTmonSecretJWTmonSecretJWT"; // Clé d'au moins 256 bits
-    private static final long TOKEN_VALIDITY = 3600 * 1000; // 1 heure
+    private static final long TOKEN_VALIDITY = 10 * 3600 * 1000; // 10 heure
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
