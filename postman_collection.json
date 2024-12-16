@@ -1,114 +1,253 @@
 {
   "info": {
-    "_postman_id": "12345678-abcd-efgh-ijkl-1234567890ab",
-    "name": "Gestion de projet de fin d'étude - API",
-    "description": "### 1. **Nom de la Collection :** Gestion de projet de fin d'étude\n\nCette collection contient les appels d'API nécessaires pour gérer les utilisateurs, les projets et les fonctionnalités d'authentification dans l'application de gestion des projets de fin d'étude.\n\n---\n\n### 2. **Structure de la Collection :**\n\n#### **1. Authentification**\n\n- **Connexion utilisateur :**\n    - **Méthode :** `POST`\n    - **URL :** `/auth/login`\n    - **Description :** Permet à un utilisateur de se connecter et d'obtenir un token JWT.\n    - **Exemple de corps de requête :**\n      - `{ \"username\": \"utilisateur\", \"password\": \"motdepasse\" }`\n\n#### **2. Utilisateurs**\n\n- **Lister les utilisateurs :**\n    - **Méthode :** `GET`\n    - **URL :** `/admin/utilisateurs`\n    - **Description :** Récupère la liste de tous les utilisateurs.\n\n- **Ajouter un utilisateur :**\n    - **Méthode :** `POST`\n    - **URL :** `/admin/utilisateurs`\n    - **Description :** Crée un nouvel utilisateur dans le système.\n    - **Exemple de corps de requête :**\n      - `{ \"username\": \"nouvelutilisateur\", \"password\": \"motdepasse\", \"role\": \"ETUDIANT\" }`\n\n- **Supprimer un utilisateur :**\n    - **Méthode :** `DELETE`\n    - **URL :** `/admin/utilisateurs/{id}`\n    - **Description :** Supprime un utilisateur basé sur son identifiant.\n\n---\n\n### 3. **Conseils pour utiliser la collection**\n\n- **Variables d'environnement :** Configurez des variables pour le `token` JWT afin de faciliter l'authentification.\n- **Tests automatisés :** Vous pouvez ajouter des tests pour vérifier le bon fonctionnement des API, tels que la vérification du statut HTTP et de la structure des réponses JSON."
+    "_postman_id": "a0b56a9f-8fbb-4cd6-92ab-f2ccf54e8e6f",
+    "name": "Gestion PFE API",
+    "description": "Collection des requêtes API pour la gestion du projet de fin d'étude.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-  "_exporter_id": "1234567890",
   "item": [
     {
-      "name": "Auth - Connexion",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/x-www-form-urlencoded"
-          }
-        ],
-        "body": {
-          "mode": "urlencoded",
-          "urlencoded": [
-            { "key": "username", "value": "admin", "type": "text" },
-            { "key": "password", "value": "admin123", "type": "text" }
-          ]
-        },
-        "url": {
-          "raw": "http://localhost:8080/api/auth/login",
-          "host": ["localhost"],
-          "port": "8080",
-          "path": ["api", "auth", "login"]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Admin - Liste des utilisateurs",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
-          }
-        ],
-        "url": {
-          "raw": "http://localhost:8080/api/admin/utilisateurs",
-          "host": ["localhost"],
-          "port": "8080",
-          "path": ["api", "admin", "utilisateurs"]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Admin - Ajouter un utilisateur",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"nom\": \"Jean\",\n  \"prenom\": \"Dupont\",\n  \"username\": \"jeandupont\",\n  \"password\": \"password123\",\n  \"telephone\": \"0612345678\",\n  \"email\": \"jean.dupont@example.com\",\n  \"role\": \"ETUDIANT\"\n}"
-        },
-        "url": {
-          "raw": "http://localhost:8080/api/admin/utilisateurs",
-          "host": ["localhost"],
-          "port": "8080",
-          "path": ["api", "admin", "utilisateurs"]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Admin - Supprimer un utilisateur",
-      "request": {
-        "method": "DELETE",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
-          }
-        ],
-        "url": {
-          "raw": "http://localhost:8080/api/admin/utilisateurs/:id",
-          "host": ["localhost"],
-          "port": "8080",
-          "path": ["api", "admin", "utilisateurs", ":id"],
-          "variable": [
-            {
-              "key": "id",
-              "value": "1"
+      "name": "Authentification",
+      "item": [
+        {
+          "name": "Connexion",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nomUtilisateur\": \"username\", \"motDePasse\": \"password\"}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/auth/connexion",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "auth", "connexion"]
             }
-          ]
+          },
+          "response": []
         }
-      },
-      "response": []
-    }
-  ],
-  "variable": [
+      ]
+    },
     {
-      "key": "token",
-      "value": ""
+      "name": "Utilisateurs",
+      "item": [
+        {
+          "name": "Créer un utilisateur",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nom\": \"Nom\", \"prenom\": \"Prenom\", \"nomUtilisateur\": \"username\", \"motDePasse\": \"password\", \"role\": \"ETUDIANT\"}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/admin/utilisateurs/creer",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "admin", "utilisateurs", "creer"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lister les utilisateurs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/admin/utilisateurs/lister",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "admin", "utilisateurs", "lister"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Modifier un utilisateur",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nom\": \"Nom Modifié\", \"prenom\": \"Prenom Modifié\", \"nomUtilisateur\": \"nouveauUsername\", \"motDePasse\": \"newPassword\", \"role\": \"ENSEIGNANT\"}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/admin/utilisateurs/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "admin", "utilisateurs", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Supprimer un utilisateur",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/admin/utilisateurs/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "admin", "utilisateurs", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Filieres",
+      "item": [
+        {
+          "name": "Lister les filières",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/admin/filieres/lister",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "admin", "filieres", "lister"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Créer une filière",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nom\": \"Informatique\"}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/admin/filieres/creer",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "admin", "filieres", "creer"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Modifier une filière",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nom\": \"Informatique Avancée\"}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/admin/filieres/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "admin", "filieres", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Supprimer une filière",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/admin/filieres/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "admin", "filieres", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Classes",
+      "item": [
+        {
+          "name": "Lister les classes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/admin/classes/lister",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "admin", "classes", "lister"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Créer une classe",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nom\": \"Classe A\", \"filiereId\": 1}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/admin/classes/creer",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "admin", "classes", "creer"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Modifier une classe",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nom\": \"Classe A Modifiée\", \"filiereId\": 1}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/admin/classes/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "admin", "classes", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Supprimer une classe",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/admin/classes/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "admin", "classes", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ]
 }
