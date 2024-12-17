@@ -25,6 +25,7 @@ public abstract class Utilisateur {
     private String nom;
     private String prenom;
     private String nomUtilisateur;
+    private String telephone;
     private String motDePasse;
 
     @Enumerated(EnumType.STRING)

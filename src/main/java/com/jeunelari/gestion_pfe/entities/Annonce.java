@@ -1,11 +1,13 @@
 package com.jeunelari.gestion_pfe.entities;
+import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
-import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Data
@@ -15,5 +17,8 @@ public class Annonce {
     private Long id;
     private String titre;
     private String contenu;
-    private Date date; // Assurez-vous que c'est java.util.Date
+    
+    @JsonFormat(pattern = "yyyy-MM-dd") // Assurez-vous du bon format
+    private LocalDate datePublication; // Remplacez Date par LocalDate
+
 }

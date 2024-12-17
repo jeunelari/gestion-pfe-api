@@ -6,15 +6,24 @@ import org.springframework.stereotype.Service;
 
 import com.jeunelari.gestion_pfe.dto.UtilisateurDTO;
 import com.jeunelari.gestion_pfe.entities.Admin;
+import com.jeunelari.gestion_pfe.entities.Classe;
 import com.jeunelari.gestion_pfe.entities.Enseignant;
 import com.jeunelari.gestion_pfe.entities.Etudiant;
+import com.jeunelari.gestion_pfe.entities.Filiere;
 import com.jeunelari.gestion_pfe.entities.Utilisateur;
+import com.jeunelari.gestion_pfe.repositories.ClasseRepository;
+import com.jeunelari.gestion_pfe.repositories.FiliereRepository;
 import com.jeunelari.gestion_pfe.repositories.UtilisateurRepository;
 
 import java.util.List;
 
 @Service
 public class UtilisateurServiceImpl implements UtilisateurService {
+	@Autowired
+	private FiliereRepository filiereRepository;
+
+	@Autowired
+	private ClasseRepository classeRepository;
 
     @Autowired
     private UtilisateurRepository utilisateurRepository;
@@ -34,10 +43,36 @@ public class UtilisateurServiceImpl implements UtilisateurService {
                 utilisateur = new Admin();
                 break;
             case ETUDIANT:
-                utilisateur = new Etudiant();
+                Etudiant etudiant = new Etudiant();
+                etudiant.setMatricule(utilisateurDTO.getMatricule());
+                
+                // Charger et associer la Filière
+                if (utilisateurDTO.getFiliereId() != null) {
+                    Filiere filiere = filiereRepository.findById(utilisateurDTO.getFiliereId())
+                            .orElseThrow(() -> new IllegalArgumentException("Filière introuvable"));
+                    etudiant.setFiliere(filiere);
+                }
+
+                // Charger et associer la Classe
+                if (utilisateurDTO.getClasseId() != null) {
+                    Classe classe = classeRepository.findById(utilisateurDTO.getClasseId())
+                            .orElseThrow(() -> new IllegalArgumentException("Classe introuvable"));
+                    etudiant.setClasse(classe);
+                }
+                
+                utilisateur = etudiant;
                 break;
             case ENSEIGNANT:
-                utilisateur = new Enseignant();
+                Enseignant enseignant = new Enseignant();
+                enseignant.setCourriel(utilisateurDTO.getCourriel());
+                
+                // Charger et associer la Filière
+                if (utilisateurDTO.getFiliereId() != null) {
+                    Filiere filiere = filiereRepository.findById(utilisateurDTO.getFiliereId())
+                            .orElseThrow(() -> new IllegalArgumentException("Filière introuvable"));
+                    enseignant.setFiliere(filiere);
+                }
+                utilisateur = enseignant;
                 break;
             default:
                 throw new IllegalArgumentException("Rôle non reconnu : " + utilisateurDTO.getRole());
@@ -46,6 +81,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         utilisateur.setNom(utilisateurDTO.getNom());
         utilisateur.setPrenom(utilisateurDTO.getPrenom());
         utilisateur.setNomUtilisateur(utilisateurDTO.getNomUtilisateur());
+        utilisateur.setTelephone(utilisateurDTO.getTelephone());
         utilisateur.setMotDePasse(passwordEncoder.encode(utilisateurDTO.getMotDePasse()));
         utilisateur.setRole(Utilisateur.Role.valueOf(utilisateurDTO.getRole().toUpperCase()));
 

@@ -7,6 +7,13 @@ public class UtilisateurDTO {
     private String nom;
     private String prenom;
     private String nomUtilisateur;
+    private String telephone;
     private String motDePasse;
-    private String role; // ADMIN, ETUDIANT, ENSEIGNANT
+    private String role;
+
+    // Champs spécifiques pour les rôles
+    private String matricule; // ETUDIANT
+    private Long filiereId;   // ETUDIANT & ENSEIGNANT
+    private Long classeId;    // ETUDIANT
+    private String courriel;  // ENSEIGNANT
 }

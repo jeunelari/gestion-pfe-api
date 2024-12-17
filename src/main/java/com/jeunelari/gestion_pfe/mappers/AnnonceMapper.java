@@ -11,7 +11,7 @@ public class AnnonceMapper {
         dto.setId(annonce.getId());
         dto.setTitre(annonce.getTitre());
         dto.setContenu(annonce.getContenu());
-        dto.setDate(annonce.getDate());
+        dto.setDate(annonce.getDatePublication()); // Utilisation de LocalDate
         return dto;
     }
 
@@ -20,7 +20,7 @@ public class AnnonceMapper {
         annonce.setId(dto.getId());
         annonce.setTitre(dto.getTitre());
         annonce.setContenu(dto.getContenu());
-        annonce.setDate(dto.getDate());
+        annonce.setDatePublication(dto.getDate()); // Utilisation de LocalDate
         return annonce;
     }
 }
