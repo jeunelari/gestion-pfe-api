@@ -19,11 +19,12 @@ import java.util.List;
 
 @Service
 public class UtilisateurServiceImpl implements UtilisateurService {
-	@Autowired
-	private FiliereRepository filiereRepository;
 
-	@Autowired
-	private ClasseRepository classeRepository;
+    @Autowired
+    private FiliereRepository filiereRepository;
+
+    @Autowired
+    private ClasseRepository classeRepository;
 
     @Autowired
     private UtilisateurRepository utilisateurRepository;
@@ -38,46 +39,26 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         }
 
         Utilisateur utilisateur;
+
+        // Déterminer le rôle et construire l'utilisateur
         switch (Utilisateur.Role.valueOf(utilisateurDTO.getRole().toUpperCase())) {
             case ADMIN:
                 utilisateur = new Admin();
                 break;
-            case ETUDIANT:
-                Etudiant etudiant = new Etudiant();
-                etudiant.setMatricule(utilisateurDTO.getMatricule());
-                
-                // Charger et associer la Filière
-                if (utilisateurDTO.getFiliereId() != null) {
-                    Filiere filiere = filiereRepository.findById(utilisateurDTO.getFiliereId())
-                            .orElseThrow(() -> new IllegalArgumentException("Filière introuvable"));
-                    etudiant.setFiliere(filiere);
-                }
 
-                // Charger et associer la Classe
-                if (utilisateurDTO.getClasseId() != null) {
-                    Classe classe = classeRepository.findById(utilisateurDTO.getClasseId())
-                            .orElseThrow(() -> new IllegalArgumentException("Classe introuvable"));
-                    etudiant.setClasse(classe);
-                }
-                
-                utilisateur = etudiant;
+            case ETUDIANT:
+                utilisateur = creerEtudiant(utilisateurDTO);
                 break;
+
             case ENSEIGNANT:
-                Enseignant enseignant = new Enseignant();
-                enseignant.setCourriel(utilisateurDTO.getCourriel());
-                
-                // Charger et associer la Filière
-                if (utilisateurDTO.getFiliereId() != null) {
-                    Filiere filiere = filiereRepository.findById(utilisateurDTO.getFiliereId())
-                            .orElseThrow(() -> new IllegalArgumentException("Filière introuvable"));
-                    enseignant.setFiliere(filiere);
-                }
-                utilisateur = enseignant;
+                utilisateur = creerEnseignant(utilisateurDTO);
                 break;
+
             default:
                 throw new IllegalArgumentException("Rôle non reconnu : " + utilisateurDTO.getRole());
         }
 
+        // Champs communs
         utilisateur.setNom(utilisateurDTO.getNom());
         utilisateur.setPrenom(utilisateurDTO.getPrenom());
         utilisateur.setNomUtilisateur(utilisateurDTO.getNomUtilisateur());
@@ -86,6 +67,41 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         utilisateur.setRole(Utilisateur.Role.valueOf(utilisateurDTO.getRole().toUpperCase()));
 
         return utilisateurRepository.save(utilisateur);
+    }
+
+    private Etudiant creerEtudiant(UtilisateurDTO utilisateurDTO) {
+        Etudiant etudiant = new Etudiant();
+        etudiant.setMatricule(utilisateurDTO.getMatricule());
+
+        // Charger et associer la Filière
+        if (utilisateurDTO.getFiliereId() != null) {
+            Filiere filiere = filiereRepository.findById(utilisateurDTO.getFiliereId())
+                    .orElseThrow(() -> new IllegalArgumentException("Filière introuvable"));
+            etudiant.setFiliere(filiere);
+        }
+
+        // Charger et associer la Classe
+        if (utilisateurDTO.getClasseId() != null) {
+            Classe classe = classeRepository.findById(utilisateurDTO.getClasseId())
+                    .orElseThrow(() -> new IllegalArgumentException("Classe introuvable"));
+            etudiant.setClasse(classe);
+        }
+
+        return etudiant;
+    }
+
+    private Enseignant creerEnseignant(UtilisateurDTO utilisateurDTO) {
+        Enseignant enseignant = new Enseignant();
+        enseignant.setCourriel(utilisateurDTO.getCourriel());
+
+        // Charger et associer la Filière
+        if (utilisateurDTO.getFiliereId() != null) {
+            Filiere filiere = filiereRepository.findById(utilisateurDTO.getFiliereId())
+                    .orElseThrow(() -> new IllegalArgumentException("Filière introuvable"));
+            enseignant.setFiliere(filiere);
+        }
+
+        return enseignant;
     }
 
     @Override
@@ -99,6 +115,33 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         utilisateur.setMotDePasse(passwordEncoder.encode(utilisateurDTO.getMotDePasse()));
         utilisateur.setRole(Utilisateur.Role.valueOf(utilisateurDTO.getRole().toUpperCase()));
 
+        // Mise à jour spécifique selon le rôle
+        if (utilisateur instanceof Etudiant) {
+            Etudiant etudiant = (Etudiant) utilisateur;
+            etudiant.setMatricule(utilisateurDTO.getMatricule());
+
+            if (utilisateurDTO.getFiliereId() != null) {
+                Filiere filiere = filiereRepository.findById(utilisateurDTO.getFiliereId())
+                        .orElseThrow(() -> new IllegalArgumentException("Filière introuvable"));
+                etudiant.setFiliere(filiere);
+            }
+
+            if (utilisateurDTO.getClasseId() != null) {
+                Classe classe = classeRepository.findById(utilisateurDTO.getClasseId())
+                        .orElseThrow(() -> new IllegalArgumentException("Classe introuvable"));
+                etudiant.setClasse(classe);
+            }
+        } else if (utilisateur instanceof Enseignant) {
+            Enseignant enseignant = (Enseignant) utilisateur;
+            enseignant.setCourriel(utilisateurDTO.getCourriel());
+
+            if (utilisateurDTO.getFiliereId() != null) {
+                Filiere filiere = filiereRepository.findById(utilisateurDTO.getFiliereId())
+                        .orElseThrow(() -> new IllegalArgumentException("Filière introuvable"));
+                enseignant.setFiliere(filiere);
+            }
+        }
+
         return utilisateurRepository.save(utilisateur);
     }
 
@@ -111,5 +154,4 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     public List<Utilisateur> listerUtilisateurs() {
         return utilisateurRepository.findAll();
     }
-    
 }
