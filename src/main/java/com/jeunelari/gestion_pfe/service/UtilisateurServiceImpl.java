@@ -59,21 +59,37 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         }
 
         // Champs communs
+        //utilisateur.setNom(utilisateurDTO.getNom());
+        //utilisateur.setPrenom(utilisateurDTO.getPrenom());
+       // utilisateur.setNomUtilisateur(utilisateurDTO.getNomUtilisateur());
+       // utilisateur.setTelephone(utilisateurDTO.getTelephone());
+       // utilisateur.setMotDePasse(passwordEncoder.encode(utilisateurDTO.getMotDePasse()));
+       // utilisateur.setRole(Utilisateur.Role.valueOf(utilisateurDTO.getRole().toUpperCase()));
+
+       // return utilisateurRepository.save(utilisateur);
+  // }
+        
         utilisateur.setNom(utilisateurDTO.getNom());
         utilisateur.setPrenom(utilisateurDTO.getPrenom());
         utilisateur.setNomUtilisateur(utilisateurDTO.getNomUtilisateur());
-        utilisateur.setTelephone(utilisateurDTO.getTelephone());
-        utilisateur.setMotDePasse(passwordEncoder.encode(utilisateurDTO.getMotDePasse()));
+     // **Modification : vérification et encodage systématique du mot de passe**
+        if (utilisateurDTO.getMotDePasse() == null || utilisateurDTO.getMotDePasse().isBlank()) {
+            throw new IllegalArgumentException("Le mot de passe ne peut pas être vide.");
+        }
+        utilisateur.setMotDePasse(passwordEncoder.encode(utilisateurDTO.getMotDePasse())); // Encodage
+
         utilisateur.setRole(Utilisateur.Role.valueOf(utilisateurDTO.getRole().toUpperCase()));
 
         return utilisateurRepository.save(utilisateur);
     }
+    
+    
 
     private Etudiant creerEtudiant(UtilisateurDTO utilisateurDTO) {
         Etudiant etudiant = new Etudiant();
         etudiant.setMatricule(utilisateurDTO.getMatricule());
 
-        // Charger et associer la Filière
+     // Charger et associer la Filière
         if (utilisateurDTO.getFiliereId() != null) {
             Filiere filiere = filiereRepository.findById(utilisateurDTO.getFiliereId())
                     .orElseThrow(() -> new IllegalArgumentException("Filière introuvable"));
@@ -91,7 +107,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     }
 
     private Enseignant creerEnseignant(UtilisateurDTO utilisateurDTO) {
-        Enseignant enseignant = new Enseignant();
+    	Enseignant enseignant = new Enseignant();
         enseignant.setCourriel(utilisateurDTO.getCourriel());
 
         // Charger et associer la Filière

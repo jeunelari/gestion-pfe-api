@@ -11,7 +11,6 @@ public class UtilisateurDTO {
     private String motDePasse;
     private String role;
 
-    // Champs spécifiques pour les rôles
     private String matricule; // ETUDIANT
     private Long filiereId;   // ETUDIANT & ENSEIGNANT
     private Long classeId;    // ETUDIANT
